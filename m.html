@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+        <form id="myform">
+            <label for="inputid1">Seller Price</label>
+            <input type="text" id="inputid1"/>
+            <label for="inputid2">Product Nmae</label>
+            <input type="text" id="inputid2"/>
+            <label for="inputid3">Choose a Category :</label>
+            <select id="inputid3">
+                <option value="Eloctornics">Eloctornics</option>
+                <option value="Food items">Food Items</option>
+                <option value="SkinC Care">Skin Care</option>    
+            </select>
+            <button type="submit">Add Product</button>
+        </form>
+        <ul id="id1">
+        </ul>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js"></script>
+<script>
+    let reload=document.getElementById("myform")
+    reload.addEventListener("submit",function(event){
+        event.preventDefault();
+        
+        let price=event.target.inputid1.value;
+        let product=event.target.inputid2.value;
+        let category=event.target.inputid3.value;
+
+        let obj={
+            price,
+            product,
+            category
+        }
+        axios.post("https://crudcrud.com/api/9f0c1f9fbcf44ea08dd8a1c7ddbe3a01/hotel",obj)
+        .then((response)=>{
+            showOnScreen(response.data)
+            console.log(response)
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
+        //localStorage.setItem(obj.product,JSON.stringify(obj))
+        //showOnScreen(obj)
+
+    })
+
+    window.addEventListener("DOMContentLoaded",()=>{
+        axios.get("https://crudcrud.com/api/9f0c1f9fbcf44ea08dd8a1c7ddbe3a01/hotel",obj)
+        .then((response)=>{
+            console.log(response)
+            for(var i=0;i<response.data.length;i++){
+                showOnScreen(response.data[i])
+            }
+        })
+        .catch((err)=>{
+            console.lo(err)
+        })
+    })
+        function showOnScreen(obj){
+                let parent=document.getElementById("id1")
+                let child=document.createElement("li")
+                child.textContent=obj.parent+"-"+obj.price+"-"+obj.category;
+                let deletebutton=document.createElement("input")
+                deletebutton.type="button"
+                deletebutton.value="Delete"
+                deletebutton.onclick=()=>{
+                    localStorage.removeItem(obj.product)
+                    parent.removeChild(child)
+                }
+                let editbutton=document.createElement("input")
+                editbutton.type="button"
+                editbutton.value="Edit"
+                editbutton.onclick=()=>{
+                    localStorage.removeItem(obj.product)
+                    document.getElementById("inputid1").value=obj.price
+                    document.getElementById("inputid2").value=obj.product
+                    document.getElementById("inputid3").value=obj.category
+                }
+                child.appendChild(editbutton)
+                child.appendChild(deletebutton)
+                parent.appendChild(child)
+            
+
+        }
+            
+        
+    //})
+    
+    
+</script>
